@@ -1,0 +1,22 @@
+name: gd_multieval
+description: Multimodal group discussion evaluation environment for AI agents
+version: 0.1.0
+entrypoint: app.env:GDMultiEvalEnv
+
+tasks:
+  - name: easy_single_speaker_eval
+    difficulty: easy
+    description: Score a single speaker in a simple GD setting.
+
+  - name: medium_multi_speaker_ranking
+    difficulty: medium
+    description: Evaluate multiple speakers, rank them, and choose the winner.
+
+  - name: hard_full_moderation
+    difficulty: hard
+    description: Detect dominance, low participation, irrelevance, and select the best candidate.
+
+metadata:
+  domain: recruitment
+  modality: text_plus_structured_multimodal_features
+  real_world_task: group_discussion_evaluation

@@ -1,0 +1,45 @@
+{
+  "episode_id": "gd_hard_002",
+  "difficulty": "hard",
+  "topic": "Is globalization beneficial for developing countries?",
+  "turns": [
+    {
+      "speaker": "Amit",
+      "text": "Globalization boosts economic growth and job opportunities.",
+      "timestamp": 0.0
+    },
+    {
+      "speaker": "Sara",
+      "text": "But it increases inequality and can exploit local workers.",
+      "timestamp": 7.0
+    }
+  ],
+  "speaker_stats": {
+    "Amit": {
+      "speaking_time_sec": 30,
+      "interruptions": 0,
+      "filler_count": 2,
+      "confidence_score": 0.82,
+      "engagement_score": 0.80,
+      "relevance_score": 0.91
+    },
+    "Sara": {
+      "speaking_time_sec": 28,
+      "interruptions": 0,
+      "filler_count": 1,
+      "confidence_score": 0.83,
+      "engagement_score": 0.81,
+      "relevance_score": 0.92
+    }
+  },
+  "ground_truth": {
+    "winner": "Sara",
+    "dominant_speaker": null,
+    "low_participation_speakers": [],
+    "irrelevant_speakers": [],
+    "scores": {
+      "Amit": 0.87,
+      "Sara": 0.90
+    }
+  }
+}

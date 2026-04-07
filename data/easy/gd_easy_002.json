@@ -1,0 +1,45 @@
+{
+  "episode_id": "gd_easy_002",
+  "difficulty": "easy",
+  "topic": "Online learning vs offline learning",
+  "turns": [
+    {
+      "speaker": "Ravi",
+      "text": "Online learning is flexible and students can learn anytime.",
+      "timestamp": 0.0
+    },
+    {
+      "speaker": "Meena",
+      "text": "Offline learning provides better interaction with teachers.",
+      "timestamp": 7.5
+    }
+  ],
+  "speaker_stats": {
+    "Ravi": {
+      "speaking_time_sec": 25,
+      "interruptions": 0,
+      "filler_count": 2,
+      "confidence_score": 0.75,
+      "engagement_score": 0.72,
+      "relevance_score": 0.85
+    },
+    "Meena": {
+      "speaking_time_sec": 28,
+      "interruptions": 0,
+      "filler_count": 1,
+      "confidence_score": 0.82,
+      "engagement_score": 0.78,
+      "relevance_score": 0.88
+    }
+  },
+  "ground_truth": {
+    "winner": "Meena",
+    "dominant_speaker": null,
+    "low_participation_speakers": [],
+    "irrelevant_speakers": [],
+    "scores": {
+      "Ravi": 0.78,
+      "Meena": 0.87
+    }
+  }
+}

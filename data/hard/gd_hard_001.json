@@ -1,0 +1,83 @@
+{
+  "episode_id": "gd_hard_001",
+  "difficulty": "hard",
+  "topic": "Is remote work better than office work?",
+  "turns": [
+    {
+      "speaker": "Karthik",
+      "text": "Remote work saves travel time and improves work-life balance.",
+      "timestamp": 0.0
+    },
+    {
+      "speaker": "Meena",
+      "text": "Office work is better for collaboration and discipline.",
+      "timestamp": 6.0
+    },
+    {
+      "speaker": "Karthik",
+      "text": "No, remote work is obviously superior in almost every case.",
+      "timestamp": 10.0
+    },
+    {
+      "speaker": "Arun",
+      "text": "Yesterday I saw a movie about office culture, it was very interesting.",
+      "timestamp": 16.0
+    },
+    {
+      "speaker": "Divya",
+      "text": "Both models have advantages, and the best option depends on the job role and company needs.",
+      "timestamp": 22.0
+    },
+    {
+      "speaker": "Karthik",
+      "text": "Still, remote work should be the default everywhere.",
+      "timestamp": 31.0
+    }
+  ],
+  "speaker_stats": {
+    "Karthik": {
+      "speaking_time_sec": 46,
+      "interruptions": 3,
+      "filler_count": 2,
+      "confidence_score": 0.83,
+      "engagement_score": 0.78,
+      "relevance_score": 0.76
+    },
+    "Meena": {
+      "speaking_time_sec": 14,
+      "interruptions": 0,
+      "filler_count": 1,
+      "confidence_score": 0.72,
+      "engagement_score": 0.68,
+      "relevance_score": 0.80
+    },
+    "Arun": {
+      "speaking_time_sec": 9,
+      "interruptions": 0,
+      "filler_count": 0,
+      "confidence_score": 0.60,
+      "engagement_score": 0.55,
+      "relevance_score": 0.20
+    },
+    "Divya": {
+      "speaking_time_sec": 21,
+      "interruptions": 0,
+      "filler_count": 1,
+      "confidence_score": 0.88,
+      "engagement_score": 0.84,
+      "relevance_score": 0.93
+    }
+  },
+  "ground_truth": {
+    "winner": "Divya",
+    "dominant_speaker": "Karthik",
+    "low_participation_speakers": ["Arun"],
+    "irrelevant_speakers": ["Arun"],
+    "scores": {
+      "Karthik": 0.69,
+      "Meena": 0.71,
+      "Arun": 0.32,
+      "Divya": 0.90
+    }
+  }
+}

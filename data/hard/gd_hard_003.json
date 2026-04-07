@@ -1,0 +1,50 @@
+{
+  "episode_id": "gd_hard_003",
+  "difficulty": "hard",
+  "topic": "Should governments regulate artificial intelligence?",
+  "turns": [
+    {
+      "speaker": "Rohit",
+      "text": "Regulation is necessary to prevent misuse of AI.",
+      "timestamp": 0.0
+    },
+    {
+      "speaker": "Nisha",
+      "text": "Too much regulation can slow down innovation.",
+      "timestamp": 6.5
+    },
+    {
+      "speaker": "Rohit",
+      "text": "Balanced policies are needed for safety and growth.",
+      "timestamp": 13.0
+    }
+  ],
+  "speaker_stats": {
+    "Rohit": {
+      "speaking_time_sec": 38,
+      "interruptions": 0,
+      "filler_count": 2,
+      "confidence_score": 0.85,
+      "engagement_score": 0.83,
+      "relevance_score": 0.93
+    },
+    "Nisha": {
+      "speaking_time_sec": 25,
+      "interruptions": 0,
+      "filler_count": 1,
+      "confidence_score": 0.81,
+      "engagement_score": 0.79,
+      "relevance_score": 0.90
+    }
+  },
+  "ground_truth": {
+    "winner": "Rohit",
+    "dominant_speaker": "Rohit",
+    "low_participation_speakers": [],
+    "irrelevant_speakers": [],
+    "scores": {
+      "Rohit": 0.92,
+      "Nisha": 0.87
+    }
+  }
+}

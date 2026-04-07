@@ -1,0 +1,45 @@
+{
+  "episode_id": "gd_medium_003",
+  "difficulty": "medium",
+  "topic": "Is technology making people less social?",
+  "turns": [
+    {
+      "speaker": "Vikram",
+      "text": "Technology connects people globally and improves communication.",
+      "timestamp": 0.0
+    },
+    {
+      "speaker": "Anjali",
+      "text": "But it reduces face-to-face interaction and increases isolation.",
+      "timestamp": 6.5
+    }
+  ],
+  "speaker_stats": {
+    "Vikram": {
+      "speaking_time_sec": 27,
+      "interruptions": 0,
+      "filler_count": 1,
+      "confidence_score": 0.79,
+      "engagement_score": 0.75,
+      "relevance_score": 0.88
+    },
+    "Anjali": {
+      "speaking_time_sec": 29,
+      "interruptions": 0,
+      "filler_count": 1,
+      "confidence_score": 0.82,
+      "engagement_score": 0.78,
+      "relevance_score": 0.90
+    }
+  },
+  "ground_truth": {
+    "winner": "Anjali",
+    "dominant_speaker": null,
+    "low_participation_speakers": [],
+    "irrelevant_speakers": [],
+    "scores": {
+      "Vikram": 0.84,
+      "Anjali": 0.89
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "episode_id": "gd_medium_002",
+  "difficulty": "medium",
+  "topic": "Work from home vs office work",
+  "turns": [
+    {
+      "speaker": "Sneha",
+      "text": "Work from home provides flexibility and better work-life balance.",
+      "timestamp": 0.0
+    },
+    {
+      "speaker": "Rahul",
+      "text": "Office work improves teamwork and communication.",
+      "timestamp": 7.0
+    },
+    {
+      "speaker": "Sneha",
+      "text": "But remote work saves travel time and cost.",
+      "timestamp": 14.0
+    }
+  ],
+  "speaker_stats": {
+    "Sneha": {
+      "speaking_time_sec": 36,
+      "interruptions": 0,
+      "filler_count": 2,
+      "confidence_score": 0.83,
+      "engagement_score": 0.81,
+      "relevance_score": 0.91
+    },
+    "Rahul": {
+      "speaking_time_sec": 24,
+      "interruptions": 0,
+      "filler_count": 1,
+      "confidence_score": 0.80,
+      "engagement_score": 0.77,
+      "relevance_score": 0.87
+    }
+  },
+  "ground_truth": {
+    "winner": "Sneha",
+    "dominant_speaker": "Sneha",
+    "low_participation_speakers": [],
+    "irrelevant_speakers": [],
+    "scores": {
+      "Sneha": 0.90,
+      "Rahul": 0.84
+    }
+  }
+}

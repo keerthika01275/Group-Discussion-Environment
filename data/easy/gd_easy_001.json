@@ -1,0 +1,36 @@
+{
+  "episode_id": "gd_easy_001",
+  "difficulty": "easy",
+  "topic": "Should social media be allowed in classrooms?",
+  "turns": [
+    {
+      "speaker": "Anu",
+      "text": "Social media can help students collaborate and share resources quickly.",
+      "timestamp": 0.0
+    },
+    {
+      "speaker": "Anu",
+      "text": "But it should be used only for learning and not for distraction.",
+      "timestamp": 8.0
+    }
+  ],
+  "speaker_stats": {
+    "Anu": {
+      "speaking_time_sec": 32,
+      "interruptions": 0,
+      "filler_count": 1,
+      "confidence_score": 0.84,
+      "engagement_score": 0.79,
+      "relevance_score": 0.90
+    }
+  },
+  "ground_truth": {
+    "winner": "Anu",
+    "dominant_speaker": null,
+    "low_participation_speakers": [],
+    "irrelevant_speakers": [],
+    "scores": {
+      "Anu": 0.86
+    }
+  }
+}

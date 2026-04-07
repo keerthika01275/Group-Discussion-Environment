@@ -1,0 +1,45 @@
+{
+  "episode_id": "gd_easy_003",
+  "difficulty": "easy",
+  "topic": "Is social media useful for students?",
+  "turns": [
+    {
+      "speaker": "Karthik",
+      "text": "Social media helps students learn new skills and stay updated.",
+      "timestamp": 0.0
+    },
+    {
+      "speaker": "Priya",
+      "text": "But it can distract students and waste time.",
+      "timestamp": 6.0
+    }
+  ],
+  "speaker_stats": {
+    "Karthik": {
+      "speaking_time_sec": 22,
+      "interruptions": 0,
+      "filler_count": 2,
+      "confidence_score": 0.78,
+      "engagement_score": 0.74,
+      "relevance_score": 0.86
+    },
+    "Priya": {
+      "speaking_time_sec": 24,
+      "interruptions": 0,
+      "filler_count": 1,
+      "confidence_score": 0.81,
+      "engagement_score": 0.77,
+      "relevance_score": 0.89
+    }
+  },
+  "ground_truth": {
+    "winner": "Priya",
+    "dominant_speaker": null,
+    "low_participation_speakers": [],
+    "irrelevant_speakers": [],
+    "scores": {
+      "Karthik": 0.80,
+      "Priya": 0.88
+    }
+  }
+}

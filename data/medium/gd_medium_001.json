@@ -1,0 +1,64 @@
+{
+  "episode_id": "gd_medium_001",
+  "difficulty": "medium",
+  "topic": "Should college students be allowed to use AI tools for assignments?",
+  "turns": [
+    {
+      "speaker": "Anu",
+      "text": "AI tools can help students understand topics faster and improve productivity.",
+      "timestamp": 0.0
+    },
+    {
+      "speaker": "Ravi",
+      "text": "But students may depend too much on AI and stop thinking on their own.",
+      "timestamp": 7.0
+    },
+    {
+      "speaker": "Priya",
+      "text": "I think AI should be allowed only as a support tool, not as a full replacement for effort.",
+      "timestamp": 15.0
+    },
+    {
+      "speaker": "Anu",
+      "text": "Yes, proper guidelines are important so that AI is used ethically.",
+      "timestamp": 24.0
+    }
+  ],
+  "speaker_stats": {
+    "Anu": {
+      "speaking_time_sec": 35,
+      "interruptions": 1,
+      "filler_count": 2,
+      "confidence_score": 0.82,
+      "engagement_score": 0.80,
+      "relevance_score": 0.88
+    },
+    "Ravi": {
+      "speaking_time_sec": 22,
+      "interruptions": 0,
+      "filler_count": 3,
+      "confidence_score": 0.71,
+      "engagement_score": 0.72,
+      "relevance_score": 0.81
+    },
+    "Priya": {
+      "speaking_time_sec": 27,
+      "interruptions": 0,
+      "filler_count": 1,
+      "confidence_score": 0.86,
+      "engagement_score": 0.79,
+      "relevance_score": 0.90
+    }
+  },
+  "ground_truth": {
+    "winner": "Priya",
+    "dominant_speaker": "Anu",
+    "low_participation_speakers": [],
+    "irrelevant_speakers": [],
+    "scores": {
+      "Anu": 0.83,
+      "Ravi": 0.74,
+      "Priya": 0.87
+    }
+  }
+}
