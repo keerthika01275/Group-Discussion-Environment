@@ -6,17 +6,19 @@ entrypoint: app.env:GDMultiEvalEnv
 tasks:
   - name: easy_single_speaker_eval
     difficulty: easy
-    description: Score a single speaker in a simple GD setting.
+    description: Evaluate a single speaker in a simple group discussion scenario.
 
   - name: medium_multi_speaker_ranking
     difficulty: medium
-    description: Evaluate multiple speakers, rank them, and choose the winner.
+    description: Evaluate multiple speakers, rank their performance, and select the best candidate.
 
   - name: hard_full_moderation
     difficulty: hard
-    description: Detect dominance, low participation, irrelevance, and select the best candidate.
+    description: Detect dominance, low participation, irrelevance, and choose the overall winner.
 
 metadata:
   domain: recruitment
   modality: text_plus_structured_multimodal_features
   real_world_task: group_discussion_evaluation
+  evaluation_type: multi_step_decision_making
+  environment_type: interactive
