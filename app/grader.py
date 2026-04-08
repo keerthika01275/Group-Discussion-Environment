@@ -1,49 +1,43 @@
-from typing import Dict
-from app.models import GDState
+def grade_easy(prediction, ground_truth):
+    score = 0.0
+
+    if prediction.get("winner") == ground_truth.get("winner"):
+        score += 0.5
+
+    if prediction.get("scores") == ground_truth.get("scores"):
+        score += 0.5
+
+    return {"score": min(score, 1.0)}
 
 
-def score_closeness(pred: float, truth: float) -> float:
-    diff = abs(pred - truth)
-    if diff <= 0.05:
-        return 1.0
-    if diff <= 0.10:
-        return 0.8
-    if diff <= 0.20:
-        return 0.5
-    return 0.0
+def grade_medium(prediction, ground_truth):
+    score = 0.0
+
+    if prediction.get("winner") == ground_truth.get("winner"):
+        score += 0.4
+
+    if prediction.get("ranking") == ground_truth.get("ranking"):
+        score += 0.3
+
+    if prediction.get("scores") == ground_truth.get("scores"):
+        score += 0.3
+
+    return {"score": min(score, 1.0)}
 
 
-def evaluate_partial_score(state: GDState, speaker: str, score: float) -> float:
-    truth = state.episode.ground_truth.scores.get(speaker)
-    if truth is None:
-        return -0.05
-    return 0.15 * score_closeness(score, truth)
+def grade_hard(prediction, ground_truth):
+    score = 0.0
 
+    if prediction.get("winner") == ground_truth.get("winner"):
+        score += 0.25
 
-def final_grade(state: GDState) -> float:
-    gt = state.episode.ground_truth
-    total = 0.0
+    if prediction.get("dominant_speaker") == ground_truth.get("dominant_speaker"):
+        score += 0.25
 
-    if state.selected_winner == gt.winner:
-        total += 0.30
+    if set(prediction.get("low_participation_speakers", [])) == set(ground_truth.get("low_participation_speakers", [])):
+        score += 0.25
 
-    if state.flagged_dominance == gt.dominant_speaker:
-        total += 0.20
+    if set(prediction.get("irrelevant_speakers", [])) == set(ground_truth.get("irrelevant_speakers", [])):
+        score += 0.25
 
-    if set(state.low_participation_flags) == set(gt.low_participation_speakers):
-        total += 0.20
-
-    if set(state.irrelevant_speaker_flags) == set(gt.irrelevant_speakers):
-        total += 0.20
-
-    if state.speaker_scores:
-        score_part = 0.0
-        count = 0
-        for speaker, pred in state.speaker_scores.items():
-            if speaker in gt.scores:
-                score_part += score_closeness(pred, gt.scores[speaker])
-                count += 1
-        if count > 0:
-            total += 0.10 * (score_part / count)
-
-    return min(total, 1.0)
+    return {"score": min(score, 1.0)}

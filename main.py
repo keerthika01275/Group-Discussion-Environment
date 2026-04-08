@@ -6,7 +6,6 @@ from pydantic import ValidationError
 from app.env import GDMultiEvalEnv
 from app.models import GDAction
 
-
 app = Flask(__name__)
 
 env = GDMultiEvalEnv(difficulty="hard")
@@ -15,11 +14,11 @@ initialized = False
 
 @app.get("/")
 def home():
-    from inference import main
+    from inference import main as inference_main
 
     buffer = io.StringIO()
     with redirect_stdout(buffer):
-        main()
+        inference_main()
 
     output = buffer.getvalue()
 
@@ -84,5 +83,9 @@ def step_env():
     }), 200
 
 
-if __name__ == "__main__":
+def main():
     app.run(host="0.0.0.0", port=7860)
+
+
+if __name__ == "__main__":
+    main()

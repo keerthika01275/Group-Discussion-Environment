@@ -2,7 +2,7 @@ spec_version: 1
 name: gd_multieval
 type: space
 runtime: flask
-app: main:app
+app: main:main
 port: 7860
 
 version: "0.1.0"
@@ -28,15 +28,18 @@ tasks:
     difficulty: easy
     description: Score a single speaker in a simple group discussion setting.
     max_steps: 10
+    grader: grader:grade_easy
 
   - id: task_medium
     name: Multi-Speaker Ranking
     difficulty: medium
     description: Evaluate multiple speakers, compare them, and select the best candidate.
     max_steps: 16
+    grader: grader:grade_medium
 
   - id: task_hard
     name: Full Moderation
     difficulty: hard
     description: Detect dominance, low participation, irrelevance, and select the final winner.
     max_steps: 20
+    grader: grader:grade_hard
