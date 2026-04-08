@@ -1,24 +1,42 @@
+spec_version: 1
 name: gd_multieval
-description: Multimodal group discussion evaluation environment for AI agents
-version: 0.1.0
-entrypoint: app.env:GDMultiEvalEnv
+type: space
+runtime: flask
+app: main:app
+port: 7860
 
-tasks:
-  - name: easy_single_speaker_eval
-    difficulty: easy
-    description: Evaluate a single speaker in a simple group discussion scenario.
-
-  - name: medium_multi_speaker_ranking
-    difficulty: medium
-    description: Evaluate multiple speakers, rank their performance, and select the best candidate.
-
-  - name: hard_full_moderation
-    difficulty: hard
-    description: Detect dominance, low participation, irrelevance, and choose the overall winner.
+version: "0.1.0"
+description: >
+  Multimodal group discussion evaluation environment for AI agents.
+  It evaluates placement-style group discussions using transcript turns
+  and structured speaker metrics such as speaking time, interruptions,
+  confidence, engagement, and relevance.
 
 metadata:
   domain: recruitment
-  modality: text_plus_structured_multimodal_features
-  real_world_task: group_discussion_evaluation
-  evaluation_type: multi_step_decision_making
-  environment_type: interactive
+  benchmark: gd_multieval
+  tags:
+    - openenv
+    - recruitment
+    - group-discussion
+    - evaluation
+    - multimodal
+
+tasks:
+  - id: task_easy
+    name: Single Speaker Evaluation
+    difficulty: easy
+    description: Score a single speaker in a simple group discussion setting.
+    max_steps: 10
+
+  - id: task_medium
+    name: Multi-Speaker Ranking
+    difficulty: medium
+    description: Evaluate multiple speakers, compare them, and select the best candidate.
+    max_steps: 16
+
+  - id: task_hard
+    name: Full Moderation
+    difficulty: hard
+    description: Detect dominance, low participation, irrelevance, and select the final winner.
+    max_steps: 20
