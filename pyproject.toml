@@ -18,7 +18,7 @@ dependencies = [
 
 # 🔥 REQUIRED for multi-mode deployment
 [project.scripts]
-server = "server.app:app"
+server = "server.app:main"
 
 # 🔧 Build system (mandatory)
 [build-system]
