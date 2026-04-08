@@ -9,12 +9,18 @@ readme = "README.md"
 requires-python = ">=3.11"
 
 dependencies = [
-    "flask",
-    "gunicorn",
-    "pydantic",
-    "openai"
+    "flask==3.1.0",
+    "gunicorn==25.0.0",
+    "pydantic==2.12.5",
+    "openai==2.30.0",
+    "openenv-core>=0.2.0"
 ]
 
+# 🔥 REQUIRED for multi-mode deployment
+[project.scripts]
+server = "server.app:app"
+
+# 🔧 Build system (mandatory)
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
