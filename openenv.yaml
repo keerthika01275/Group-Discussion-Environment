@@ -28,18 +28,18 @@ tasks:
     difficulty: easy
     description: Score a single speaker in a simple group discussion setting.
     max_steps: 10
-    grader: app.grader:grade_easy
+    grader: grader:grade_easy
 
   - id: task_medium
     name: Multi-Speaker Ranking
     difficulty: medium
     description: Evaluate multiple speakers, compare them, and select the best candidate.
     max_steps: 16
-    grader: app.grader:grade_medium
+    grader: grader:grade_medium
 
   - id: task_hard
     name: Full Moderation
     difficulty: hard
     description: Detect dominance, low participation, irrelevance, and select the final winner.
     max_steps: 20
-    grader: app.grader:grade_hard
+    grader: grader:grade_hard
