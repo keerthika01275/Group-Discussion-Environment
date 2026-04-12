@@ -8,7 +8,7 @@ from app.models import GDAction
 
 app = Flask(__name__)
 
-env = GDMultiEvalEnv(difficulty="hard")
+env = GDMultiEvalEnv(task_id=TASK_NAME)
 initialized = False
 
 
@@ -32,7 +32,12 @@ def health():
 
 @app.post("/reset")
 def reset_env():
-    global initialized
+    global initialized, env
+
+    data = request.get_json(silent=True) or {}
+    task_id = data.get("task_id", "task_hard")
+
+    env = GDMultiEvalEnv(task_id=task_id)
     obs = env.reset()
     initialized = True
     return jsonify(obs.model_dump()), 200

@@ -1,127 +1,194 @@
-from typing import Dict, Any, Optional
-from app.models import GDAction, GDObservation, GDReward, GDState
-from app.tasks import load_episodes_by_difficulty
-from app.grader import evaluate_partial_score, final_grade
+import json
+from pathlib import Path
+from typing import Any, Dict
+
+from app.models import GDObservation, GDReward, GDState
+from app.grader import (
+    evaluate_partial_score,
+    grade_easy,
+    grade_medium,
+    grade_hard,
+)
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+TASKS = {
+    "task_easy": {
+        "difficulty": "easy",
+        "file": BASE_DIR / "data" / "easy" / "gd_easy_001.json",
+        "grader": grade_easy,
+    },
+    "task_medium": {
+        "difficulty": "medium",
+        "file": BASE_DIR / "data" / "medium" / "gd_medium_001.json",
+        "grader": grade_medium,
+    },
+    "task_hard": {
+        "difficulty": "hard",
+        "file": BASE_DIR / "data" / "hard" / "gd_hard_001.json",
+        "grader": grade_hard,
+    },
+}
 
 
 class GDMultiEvalEnv:
-    def __init__(self, difficulty: str = "easy", max_steps: int = 8):
-        self.difficulty = difficulty
-        self.max_steps = max_steps
-        self.episodes = load_episodes_by_difficulty(difficulty)
-        self.current_index = -1
-        self.state_obj: Optional[GDState] = None
+    def __init__(self, task_id: str = "task_hard", difficulty: str | None = None):
+        """
+        Supports both:
+        - GDMultiEvalEnv(task_id="task_hard")
+        - GDMultiEvalEnv(difficulty="hard")
 
-    def _build_observation(self) -> GDObservation:
-        episode = self.state_obj.episode
-        visible_turns = episode.turns[:self.state_obj.revealed_turn_count]
-        return GDObservation(
-            episode_id=episode.episode_id,
-            topic=episode.topic,
-            visible_turns=visible_turns,
-            speaker_stats=episode.speaker_stats,
-            available_actions=[
-                "score_speaker",
-                "flag_dominance",
-                "flag_low_participation",
-                "flag_irrelevant_speaker",
-                "request_more_context",
-                "select_winner",
-                "submit_final_evaluation",
-            ],
-            step_count=self.state_obj.step_count,
-            max_steps=self.state_obj.max_steps,
-            done=self.state_obj.done
-        )
+        This helps avoid breaking old code while enabling proper task registration.
+        """
+        if difficulty is not None:
+            difficulty_to_task = {
+                "easy": "task_easy",
+                "medium": "task_medium",
+                "hard": "task_hard",
+            }
+            task_id = difficulty_to_task.get(difficulty, "task_hard")
 
-    def reset(self) -> GDObservation:
-        self.current_index = (self.current_index + 1) % len(self.episodes)
-        episode = self.episodes[self.current_index]
+        if task_id not in TASKS:
+            raise ValueError(f"Unknown task_id: {task_id}")
 
-        initial_reveal = min(2, len(episode.turns))
-        self.state_obj = GDState(
-            episode=episode,
-            revealed_turn_count=initial_reveal,
-            step_count=0,
-            max_steps=self.max_steps,
-            done=False,
+        self.task_id = task_id
+        self.task_config = TASKS[task_id]
+        self.difficulty = self.task_config["difficulty"]
+        self.grader = self.task_config["grader"]
+
+        self.task_data: Dict[str, Any] = {}
+        self._state = None
+        self._done = False
+        self._load_task()
+
+    @classmethod
+    def available_tasks(cls):
+        return list(TASKS.keys())
+
+    def _load_task(self):
+        task_file = self.task_config["file"]
+
+        if not task_file.exists():
+            raise FileNotFoundError(f"Task file not found: {task_file}")
+
+        with open(task_file, "r", encoding="utf-8") as f:
+            self.task_data = json.load(f)
+
+    def reset(self):
+        self._done = False
+
+        transcript = self.task_data.get("transcript", self.task_data.get("turns", []))
+        speaker_stats = self.task_data.get("speaker_stats", {})
+        ground_truth = self.task_data.get("ground_truth", {})
+
+        self._state = GDState(
+            task_id=self.task_id,
+            difficulty=self.difficulty,
+            transcript=transcript,
+            speaker_stats=speaker_stats,
+            ground_truth=ground_truth,
+            flagged_dominance=[],
+            flagged_low_participation=[],
+            flagged_irrelevant=[],
             selected_winner=None,
-            speaker_scores={},
-            flagged_dominance=None,
-            low_participation_flags=[],
-            irrelevant_speaker_flags=[]
+            score=0.0,
         )
-        return self._build_observation()
 
-    def state(self) -> GDState:
-        return self.state_obj
+        return GDObservation(
+            task_id=self.task_id,
+            difficulty=self.difficulty,
+            transcript=transcript,
+            speaker_stats=speaker_stats,
+            done=False,
+        )
 
-    def step(self, action: GDAction):
-        if self.state_obj is None:
-            raise ValueError("Environment not initialized. Call reset() first.")
+    def state(self):
+        if self._state is None:
+            raise RuntimeError("Environment not initialized. Call reset() first.")
+        return self._state
 
-        if self.state_obj.done:
-            reward = GDReward(value=0.0, feedback="Episode already completed.")
-            return self._build_observation(), reward, True, {}
+    def step(self, action):
+        if self._state is None:
+            raise RuntimeError("Environment not initialized. Call reset() first.")
 
-        self.state_obj.step_count += 1
-        reward_value = 0.0
-        feedback = "Action processed."
-
-        if action.action_type == "request_more_context":
-            prev = self.state_obj.revealed_turn_count
-            self.state_obj.revealed_turn_count = min(
-                len(self.state_obj.episode.turns),
-                self.state_obj.revealed_turn_count + 2
+        if self._done:
+            obs = GDObservation(
+                task_id=self.task_id,
+                difficulty=self.difficulty,
+                transcript=self._state.transcript,
+                speaker_stats=self._state.speaker_stats,
+                done=True,
             )
-            if self.state_obj.revealed_turn_count > prev:
-                reward_value = 0.05
-                feedback = "More context revealed."
-            else:
-                reward_value = -0.02
-                feedback = "No more context available."
+            reward = GDReward(score=0.0, message="Episode already completed")
+            return obs, reward, True, {"task_id": self.task_id}
 
-        elif action.action_type == "score_speaker":
-            if action.speaker is None or action.score is None:
-                reward_value = -0.05
-                feedback = "Missing speaker or score."
-            else:
-                self.state_obj.speaker_scores[action.speaker] = action.score
-                reward_value = evaluate_partial_score(self.state_obj, action.speaker, action.score)
-                feedback = f"Stored score for {action.speaker}."
+        reward_score = evaluate_partial_score(self._state, action)
+        action_type = getattr(action, "action_type", None)
+        target = getattr(action, "target", None)
 
-        elif action.action_type == "flag_dominance":
-            self.state_obj.flagged_dominance = action.speaker
-            reward_value = 0.10 if action.speaker == self.state_obj.episode.ground_truth.dominant_speaker else -0.05
-            feedback = "Dominance flag recorded."
+        if action_type == "flag_dominance" and target is not None:
+            if target not in self._state.flagged_dominance:
+                self._state.flagged_dominance.append(target)
 
-        elif action.action_type == "flag_low_participation":
-            if action.speaker and action.speaker not in self.state_obj.low_participation_flags:
-                self.state_obj.low_participation_flags.append(action.speaker)
-                reward_value = 0.10 if action.speaker in self.state_obj.episode.ground_truth.low_participation_speakers else -0.05
-                feedback = "Low participation flag recorded."
+        elif action_type == "flag_low_participation" and target is not None:
+            if target not in self._state.flagged_low_participation:
+                self._state.flagged_low_participation.append(target)
 
-        elif action.action_type == "flag_irrelevant_speaker":
-            if action.speaker and action.speaker not in self.state_obj.irrelevant_speaker_flags:
-                self.state_obj.irrelevant_speaker_flags.append(action.speaker)
-                reward_value = 0.10 if action.speaker in self.state_obj.episode.ground_truth.irrelevant_speakers else -0.05
-                feedback = "Irrelevant speaker flag recorded."
+        elif action_type == "flag_irrelevant_speaker" and target is not None:
+            if target not in self._state.flagged_irrelevant:
+                self._state.flagged_irrelevant.append(target)
 
-        elif action.action_type == "select_winner":
-            self.state_obj.selected_winner = action.speaker
-            reward_value = 0.15 if action.speaker == self.state_obj.episode.ground_truth.winner else -0.05
-            feedback = "Winner selected."
+        elif action_type == "select_winner" and target is not None:
+            self._state.selected_winner = target
 
-        elif action.action_type == "submit_final_evaluation":
-            final_score = final_grade(self.state_obj)
-            reward_value = final_score
-            feedback = f"Final evaluation submitted. Score={final_score:.2f}"
-            self.state_obj.done = True
+        elif action_type == "submit_final_evaluation":
+            prediction = self._build_prediction()
+            result = self.grader(prediction, self.task_data.get("ground_truth", {}))
+            reward_score = float(result.get("score", 0.0))
+            reward_score = max(0.0, min(1.0, reward_score))
+            self._state.score = reward_score
+            self._done = True
 
-        if self.state_obj.step_count >= self.state_obj.max_steps and not self.state_obj.done:
-            self.state_obj.done = True
-            reward_value -= 0.05
-            feedback += " Max step limit reached."
+        if not self._done:
+            self._state.score += reward_score
+            self._state.score = max(0.0, min(1.0, self._state.score))
 
-        reward = GDReward(value=reward_value, feedback=feedback)
-        return self._build_observation(), reward, self.state_obj.done, {"feedback": feedback}
+        obs = GDObservation(
+            task_id=self.task_id,
+            difficulty=self.difficulty,
+            transcript=self._state.transcript,
+            speaker_stats=self._state.speaker_stats,
+            done=self._done,
+        )
+
+        reward = GDReward(
+            score=reward_score,
+            message="Step evaluated successfully"
+        )
+
+        info = {
+            "task_id": self.task_id,
+            "difficulty": self.difficulty,
+        }
+
+        return obs, reward, self._done, info
+
+    def _build_prediction(self):
+        ground_truth = self.task_data.get("ground_truth", {})
+
+        dominant_speaker = None
+        if self._state.flagged_dominance:
+            dominant_speaker = self._state.flagged_dominance[-1]
+
+        prediction = {
+            "winner": self._state.selected_winner,
+            "dominant_speaker": dominant_speaker,
+            "low_participation_speakers": self._state.flagged_low_participation,
+            "irrelevant_speakers": self._state.flagged_irrelevant,
+            "scores": ground_truth.get("scores", {}),
+            "ranking": ground_truth.get("ranking", []),
+        }
+
+        return prediction

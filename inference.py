@@ -1,5 +1,6 @@
 import json
 import os
+from turtle import done
 from typing import Dict, List, Optional, Tuple
 
 from openai import OpenAI
@@ -10,8 +11,8 @@ from app.models import GDAction, GDObservation
 API_KEY = os.getenv("HF_TOKEN") or os.getenv("API_KEY")
 API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
 MODEL_NAME = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
-TASK_NAME = os.getenv("GD_TASK", "hard_full_moderation")
-DIFFICULTY = os.getenv("GD_DIFFICULTY", "hard")
+TASK_NAME = os.getenv("GD_TASK", "task_hard")
+env = GDMultiEvalEnv(task_id=TASK_NAME)
 
 client = OpenAI(
     api_key=API_KEY or "DUMMY_KEY",
@@ -271,7 +272,7 @@ def print_score_breakdown(obs: GDObservation) -> None:
 
 
 def main() -> None:
-    env = GDMultiEvalEnv(difficulty=DIFFICULTY)
+    env = GDMultiEvalEnv(task_id=TASK_NAME)
     obs = env.reset()
 
     rewards: List[float] = []
@@ -296,10 +297,10 @@ def main() -> None:
                 action = heuristic_action(obs, step_num)
 
             obs, reward, done, info = env.step(action)
-            rewards.append(reward.value)
-
+            rewards.append(reward.score)
             action_str = format_action_for_log(action, prev_obs)
-            log_step(step_num, action_str, reward.value, done, None)
+            log_step(step_num, action_str, reward.score, done, None)
+
 
         except Exception as e:
             log_step(step_num, "error()", 0.0, done, str(e))
